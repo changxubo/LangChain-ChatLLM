@@ -1,6 +1,7 @@
 import os
 
 os.system('pip install git+https://github.com/facebookresearch/detectron2.git')
+os.system('apt-get install poppler-utils')
 import gradio as gr
 import nltk
 import sentence_transformers
