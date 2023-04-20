@@ -1,3 +1,4 @@
+torch
 langchain
 accelerate
 duckduckgo_search
