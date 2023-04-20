@@ -6,13 +6,12 @@ import gradio as gr
 import nltk
 import sentence_transformers
 import torch
+from compress_gpt.langchain import CompressPrompt as PromptTemplate
 from duckduckgo_search import ddg
 from duckduckgo_search.utils import SESSION
 from langchain.chains import RetrievalQA
 from langchain.document_loaders import UnstructuredFileLoader
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
-from langchain.prompts import PromptTemplate
-from langchain.prompts.prompt import PromptTemplate
 from langchain.vectorstores import FAISS
 
 from chatllm import ChatLLM
