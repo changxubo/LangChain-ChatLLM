@@ -70,7 +70,7 @@ class ChatLLM(LLM):
               prompt: str,
               stop: Optional[List[str]] = None) -> str:
         
-        if self.model_name == 'Minimax':
+        if self.model == 'Minimax':
             import requests
 
             group_id = os.getenv('group_id')
