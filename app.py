@@ -4,18 +4,20 @@ import gradio as gr
 import nltk
 import sentence_transformers
 import torch
-from compress_gpt.langchain import CompressPrompt as PromptTemplate
 from duckduckgo_search import ddg
 from duckduckgo_search.utils import SESSION
 from langchain.chains import RetrievalQA
 from langchain.document_loaders import UnstructuredFileLoader
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+from langchain.prompts import PromptTemplate
+from langchain.prompts.prompt import PromptTemplate
 from langchain.vectorstores import FAISS
 
 from chatllm import ChatLLM
 from chinese_text_splitter import ChineseTextSplitter
 
 # os.system('pip install git+https://github.com/facebookresearch/detectron2.git')
+
 
 
 nltk.data.path.append('./nltk_data')
