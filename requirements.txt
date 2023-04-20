@@ -14,4 +14,4 @@ faiss-cpu
 gradio
 nltk
 accelerate
-detectron2@git+https://github.com/facebookresearch/detectron2.git@v0.6#egg=detectron2
+#detectron2@git+https://github.com/facebookresearch/detectron2.git@v0.6#egg=detectron2
