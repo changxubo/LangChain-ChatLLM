@@ -187,7 +187,7 @@ if __name__ == "__main__":
                                                 label="Embedding model",
                                                 value="text2vec-base")
 
-                file = gr.File(label='请上传知识库文件',
+                file = gr.File(label='请上传知识库文件, 目前支持txt、docx、md格式',
                                file_types=['.txt', '.md', '.docx'])
                 
                 use_web = gr.Radio(["True", "False"], label="Web Search",
