@@ -15,4 +15,5 @@ gradio
 nltk
 torch
 torchvision
-
+protobuf==3.19
+jina

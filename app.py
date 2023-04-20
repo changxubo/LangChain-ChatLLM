@@ -8,6 +8,7 @@ from duckduckgo_search import ddg
 from duckduckgo_search.utils import SESSION
 from langchain.chains import RetrievalQA
 from langchain.document_loaders import UnstructuredFileLoader
+from langchain.embeddings import JinaEmbeddings
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.prompts.prompt import PromptTemplate
@@ -16,16 +17,13 @@ from langchain.vectorstores import FAISS
 from chatllm import ChatLLM
 from chinese_text_splitter import ChineseTextSplitter
 
-# os.system('pip install git+https://github.com/facebookresearch/detectron2.git')
-
-
-
 nltk.data.path.append('./nltk_data')
 
 embedding_model_dict = {
     "ernie-tiny": "nghuyong/ernie-3.0-nano-zh",
     "ernie-base": "nghuyong/ernie-3.0-base-zh",
-    "text2vec-base": "GanymedeNil/text2vec-base-chinese"
+    "text2vec-base": "GanymedeNil/text2vec-base-chinese",
+    "ViT-B-32": 'ViT-B-32::laion2b-s34b-b79k'
 }
 
 llm_model_dict = {
@@ -35,22 +33,23 @@ llm_model_dict = {
     "Minimax": "Minimax"
 }
 
-
 DEVICE = "cuda" if torch.cuda.is_available(
 ) else "mps" if torch.backends.mps.is_available() else "cpu"
 
+
 def search_web(query):
 
-        SESSION.proxies = {
-            "http": f"socks5h://localhost:7890",
-            "https": f"socks5h://localhost:7890"
-        }
-        results = ddg(query)
-        web_content = ''
-        if results:
-            for result in results:
-                web_content += result['body']
-        return web_content
+    SESSION.proxies = {
+        "http": f"socks5h://localhost:7890",
+        "https": f"socks5h://localhost:7890"
+    }
+    results = ddg(query)
+    web_content = ''
+    if results:
+        for result in results:
+            web_content += result['body']
+    return web_content
+
 
 def load_file(filepath):
     if filepath.lower().endswith(".pdf"):
@@ -64,12 +63,17 @@ def load_file(filepath):
     return docs
 
 
-
 def init_knowledge_vector_store(embedding_model, filepath):
-    embeddings = HuggingFaceEmbeddings(
-        model_name=embedding_model_dict[embedding_model], )
-    embeddings.client = sentence_transformers.SentenceTransformer(
-        embeddings.model_name, device=DEVICE)
+    if embedding_model == "ViT-B-32":
+        jina_auth_token = os.getenv('jina_auth_token')
+        embeddings = JinaEmbeddings(
+            jina_auth_token=jina_auth_token,
+            model_name=embedding_model_dict[embedding_model])
+    else:
+        embeddings = HuggingFaceEmbeddings(
+            model_name=embedding_model_dict[embedding_model], )
+        embeddings.client = sentence_transformers.SentenceTransformer(
+            embeddings.model_name, device=DEVICE)
 
     docs = load_file(filepath)
 
@@ -110,7 +114,8 @@ def get_knowledge_based_answer(query,
     if large_language_model == "Minimax":
         chatLLM.model = 'Minimax'
     else:
-        chatLLM.load_model(model_name_or_path=llm_model_dict[large_language_model])
+        chatLLM.load_model(
+            model_name_or_path=llm_model_dict[large_language_model])
         chatLLM.temperature = temperature
         chatLLM.top_p = top_p
 
@@ -185,26 +190,28 @@ if __name__ == "__main__":
                         label="large language model",
                         value="ChatGLM-6B-int4")
 
-                    embedding_model = gr.Dropdown(list(embedding_model_dict.keys()),
-                                                label="Embedding model",
-                                                value="text2vec-base")
+                    embedding_model = gr.Dropdown(list(
+                        embedding_model_dict.keys()),
+                                                  label="Embedding model",
+                                                  value="text2vec-base")
 
                 file = gr.File(label='请上传知识库文件, 目前支持txt、docx、md格式',
                                file_types=['.txt', '.md', '.docx'])
-                
-                use_web = gr.Radio(["True", "False"], label="Web Search",
-                               value="False"
-                               )
+
+                use_web = gr.Radio(["True", "False"],
+                                   label="Web Search",
+                                   value="False")
                 model_argument = gr.Accordion("模型参数配置")
 
                 with model_argument:
 
-                    VECTOR_SEARCH_TOP_K = gr.Slider(1,
-                                                    10,
-                                                    value=6,
-                                                    step=1,
-                                                    label="vector search top k",
-                                                    interactive=True)
+                    VECTOR_SEARCH_TOP_K = gr.Slider(
+                        1,
+                        10,
+                        value=6,
+                        step=1,
+                        label="vector search top k",
+                        interactive=True)
 
                     HISTORY_LEN = gr.Slider(0,
                                             3,
@@ -220,12 +227,11 @@ if __name__ == "__main__":
                                             label="temperature",
                                             interactive=True)
                     top_p = gr.Slider(0,
-                                    1,
-                                    value=0.9,
-                                    step=0.1,
-                                    label="top_p",
-                                    interactive=True)
-                
+                                      1,
+                                      value=0.9,
+                                      step=0.1,
+                                      label="top_p",
+                                      interactive=True)
 
             with gr.Column(scale=4):
                 chatbot = gr.Chatbot(label='ChatLLM').style(height=600)
@@ -240,7 +246,8 @@ if __name__ == "__main__":
                                inputs=[
                                    message, large_language_model,
                                    embedding_model, file, VECTOR_SEARCH_TOP_K,
-                                   HISTORY_LEN, temperature, top_p, use_web,state
+                                   HISTORY_LEN, temperature, top_p, use_web,
+                                   state
                                ],
                                outputs=[message, chatbot, state])
                     clear_history.click(fn=clear_session,
@@ -253,7 +260,7 @@ if __name__ == "__main__":
                                        message, large_language_model,
                                        embedding_model, file,
                                        VECTOR_SEARCH_TOP_K, HISTORY_LEN,
-                                       temperature, top_p, use_web,state
+                                       temperature, top_p, use_web, state
                                    ],
                                    outputs=[message, chatbot, state])
         gr.Markdown("""提醒：<br>
