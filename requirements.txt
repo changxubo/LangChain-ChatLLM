@@ -15,4 +15,4 @@ gradio
 nltk
 torch
 torchvision
-compress-gpt
+
