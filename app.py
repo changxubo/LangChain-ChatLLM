@@ -102,11 +102,13 @@ def get_knowledge_based_answer(query,
     prompt = PromptTemplate(template=prompt_template,
                             input_variables=["context", "question"])
     chatLLM = ChatLLM()
-    chatLLM.load_model(model_name_or_path=llm_model_dict[large_language_model])
     chatLLM.history = chat_history[-history_len:] if history_len > 0 else []
-
-    chatLLM.temperature = temperature
-    chatLLM.top_p = top_p
+    if large_language_model == "Minimax":
+        chatLLM.model = 'Minimax'
+    else:
+        chatLLM.load_model(model_name_or_path=llm_model_dict[large_language_model])
+        chatLLM.temperature = temperature
+        chatLLM.top_p = top_p
 
     knowledge_chain = RetrievalQA.from_llm(
         llm=chatLLM,
@@ -177,14 +179,14 @@ if __name__ == "__main__":
                     large_language_model = gr.Dropdown(
                         list(llm_model_dict.keys()),
                         label="large language model",
-                        value="ChatGLM-6B-int8")
+                        value="ChatGLM-6B-int4")
 
                     embedding_model = gr.Dropdown(list(embedding_model_dict.keys()),
                                                 label="Embedding model",
                                                 value="text2vec-base")
 
                 file = gr.File(label='请上传知识库文件',
-                               file_types=['.txt', '.md', '.docx', '.pdf'])
+                               file_types=['.txt', '.md', '.docx'])
                 
                 use_web = gr.Radio(["True", "False"], label="Web Search",
                                value="False"
