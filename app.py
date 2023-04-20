@@ -1,5 +1,6 @@
 import os
 
+os.system('pip install git+https://github.com/facebookresearch/detectron2.git')
 import gradio as gr
 import nltk
 import sentence_transformers
@@ -168,7 +169,7 @@ if __name__ == "__main__":
         gr.Markdown("""<h1><center>LangChain-ChatLLM-Webui</center></h1>
         <center><font size=3>
         本项目基于LangChain和大型语言模型系列模型, 提供基于本地知识的自动问答应用. <br>
-        目前项目提供基于<a href='https://github.com/THUDM/ChatGLM-6B' target="_blank">ChatGLM-6B </a>的LLM和包括GanymedeNil/text2vec-large-chinese、nghuyong/ernie-3.0-base-zh、nghuyong/ernie-3.0-nano-zh在内的多个Embedding模型, 支持上传 txt、docx、md 等文本格式文件. <br>
+        目前项目提供基于<a href='https://github.com/THUDM/ChatGLM-6B' target="_blank">ChatGLM-6B </a>的LLM和包括GanymedeNil/text2vec-large-chinese、nghuyong/ernie-3.0-base-zh、nghuyong/ernie-3.0-nano-zh在内的多个Embedding模型, 支持上传 txt、docx、md、pdf等文本格式文件. <br>
         后续将提供更加多样化的LLM、Embedding和参数选项供用户尝试, 欢迎关注<a href='https://github.com/thomas-yanxin/LangChain-ChatGLM-Webui' target="_blank">Github地址</a>.
         </center></font>
         """)
@@ -186,7 +187,7 @@ if __name__ == "__main__":
                                                 value="text2vec-base")
 
                 file = gr.File(label='请上传知识库文件',
-                               file_types=['.txt', '.md', '.docx'])
+                               file_types=['.txt', '.md', '.docx', '.pdf'])
                 
                 use_web = gr.Radio(["True", "False"], label="Web Search",
                                value="False"
