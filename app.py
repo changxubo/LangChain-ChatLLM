@@ -178,7 +178,9 @@ if __name__ == "__main__":
         <center><font size=3>
         本项目基于LangChain和大型语言模型系列模型, 提供基于本地知识的自动问答应用. <br>
         目前项目提供基于<a href='https://github.com/THUDM/ChatGLM-6B' target="_blank">ChatGLM-6B </a>系列、Minimax的LLM和包括text2vec-base-chinese、ernie-3.0-zh系列以及由<a href='https://cloud.jina.ai/user/inference' target="_blank">Jina</a>提供的ViT-B-32::laion2b-s34b-b79k等多个Embedding模型, 支持上传 txt、docx、md等文本格式文件. <br>
-        后续将提供更加多样化的LLM、Embedding和参数选项供用户尝试, 欢迎关注<a href='https://github.com/thomas-yanxin/LangChain-ChatGLM-Webui' target="_blank">Github地址</a>.
+        后续将提供更加多样化的LLM、Embedding和参数选项供用户尝试, 欢迎关注<a href='https://github.com/thomas-yanxin/LangChain-ChatGLM-Webui' target="_blank">Github地址</a>. <br>
+        本项目已内置开发者自己的key，用户无需输入自己的相关key. <br>
+        当然，更推荐您点击右上角的<strong>Duplicate this Space</strong>，将项目Fork到自己的Space中，保护个人隐私，且避免排队！
         </center></font>
         """)
         with gr.Row():
