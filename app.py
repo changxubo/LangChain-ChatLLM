@@ -23,14 +23,14 @@ embedding_model_dict = {
     "ernie-tiny": "nghuyong/ernie-3.0-nano-zh",
     "ernie-base": "nghuyong/ernie-3.0-base-zh",
     "text2vec-base": "GanymedeNil/text2vec-base-chinese",
-    "ViT-B-32": 'ViT-B-32::laion2b-s34b-b79k'
+    #"ViT-B-32": 'ViT-B-32::laion2b-s34b-b79k'
 }
 
 llm_model_dict = {
     "ChatGLM-6B-int8": "THUDM/chatglm-6b-int8",
     "ChatGLM-6B-int4": "THUDM/chatglm-6b-int4",
     "ChatGLM-6b-int4-qe": "THUDM/chatglm-6b-int4-qe",
-    "Minimax": "Minimax"
+    #"Minimax": "Minimax"
 }
 
 DEVICE = "cuda" if torch.cuda.is_available(
